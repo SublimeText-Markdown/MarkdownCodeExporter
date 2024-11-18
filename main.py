@@ -68,7 +68,7 @@ class MarkdownCodeExporter(sublime_plugin.ViewEventListener):
 
         # Find all fenced code blocks (```)
         content = view.substr(sublime.Region(0, view.size()))
-        pattern = r'^( *```+)[\w]*\n[\s\S]*?\n\1$'
+        pattern = r'^( *```+)[\w\-]*\n[\s\S]*?\n\1$'
         matches = re.finditer(pattern, content, re.MULTILINE)
 
         for match in matches:
