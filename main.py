@@ -55,7 +55,7 @@ class MarkdownCodeExporter(sublime_plugin.ViewEventListener):
             phantom = sublime.Phantom(
                 sublime.Region(region.begin() - 1, region.begin() - 1), # -1 puts the phantom to the previous line.
                 content,
-                sublime.LAYOUT_BELOW,
+                sublime.LAYOUT_BLOCK,
                 on_navigate=lambda href, region=region: self.handle_phantom_click(href, region)
             )
             phantoms.append(phantom)
