@@ -15,6 +15,10 @@ class MarkdownCodeExporter(sublime_plugin.ViewEventListener):
         self.update_phantoms()
 
     def on_modified(self):
+        # Don't operate on 1MB or larger files.
+        if self.view.size() > 2**20:
+            return
+
         self.update_phantoms()
 
     def on_load(self):
