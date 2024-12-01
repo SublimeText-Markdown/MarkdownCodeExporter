@@ -12,6 +12,10 @@ class MarkdownCodeExporter(sublime_plugin.ViewEventListener):
     def __init__(self, view):
         super().__init__(view)
         self.phantom_set = sublime.PhantomSet(view)
+
+        self.timeout_scheduled = False
+        self.needs_update = False
+
         self.update_phantoms()
 
     def on_modified(self):
@@ -19,10 +23,23 @@ class MarkdownCodeExporter(sublime_plugin.ViewEventListener):
         if self.view.size() > 2**20:
             return
 
-        self.update_phantoms()
+        # Call update_phantoms(), but not any more than 10 times a second
+        if self.timeout_scheduled:
+            self.needs_update = True
+
+        else:
+            self.timeout_scheduled = True
+            sublime.set_timeout(lambda: self.handle_timeout(), 100)
+            self.update_phantoms()
 
     def on_load(self):
         self.update_phantoms()
+
+    def handle_timeout(self):
+        self.timeout_scheduled = False
+        if self.needs_update:
+            self.needs_update = False
+            self.update_phantoms()
 
     def update_phantoms(self):
         # Find all fenced code blocks
